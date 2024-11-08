@@ -9,3 +9,4 @@ sam:
   _target_: src.model.sam.load_sam
   model_type: vit_h
   checkpoint_dir: ${machine.root_dir}/pretrained/segment-anything/
+  # checkpoint_dir: /home/aaron.derybel/projects/SimRob/src/segment_anything_2/checkpoints

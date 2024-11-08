@@ -61,15 +61,13 @@ def render(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("cad_path", nargs="?", help="Path to the model file")
-    parser.add_argument("obj_pose", nargs="?", help="Path to the model file")
-    parser.add_argument(
-        "output_dir", nargs="?", help="Path to where the final files will be saved"
-    )
-    parser.add_argument("gpus_devices", nargs="?", help="GPU devices")
-    parser.add_argument("disable_output", nargs="?", help="Disable output of blender")
-    parser.add_argument("light_itensity", nargs="?", type=float, default=0.6, help="Light itensity")
-    parser.add_argument("radius", nargs="?", type=float, default=1, help="Distance from camera to object")
+    parser.add_argument("-cad_path", nargs="?", help="Path to the model file")
+    parser.add_argument("-obj_pose", nargs="?", help="Path to the model file")
+    parser.add_argument("-output_dir", nargs="?", help="Path to where the final files will be saved")
+    parser.add_argument("-gpus_devices", nargs="?", help="GPU devices")
+    parser.add_argument("-disable_output", nargs="?", help="Disable output of blender")
+    parser.add_argument("-light_itensity", nargs="?", type=float, default=0.6, help="Light itensity")
+    parser.add_argument("-radius", nargs="?", type=float, default=1, help="Distance from camera to object")
     args = parser.parse_args()
     print(args)
     is_hot3d = "hot3d" in args.output_dir
@@ -95,6 +93,15 @@ if __name__ == "__main__":
 
     # load mesh to meter
     mesh = trimesh.load_mesh(args.cad_path)
+
+    # mesh.show()
+    # Check vertices for NaN or infinite values
+    if np.any(np.isnan(mesh.vertices)) or np.any(np.isinf(mesh.vertices)):
+        print("Mesh contains NaN or infinite vertex values.")
+
+    # Check faces for invalid indices
+    if np.any(mesh.faces < 0) or np.any(mesh.faces >= len(mesh.vertices)):
+        print("Mesh faces contain invalid vertex indices.")
 
     # re-center objects at the origin
     re_center_transform = np.eye(4)

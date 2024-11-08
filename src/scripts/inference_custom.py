@@ -46,10 +46,12 @@ def visualize(rgb, detections, save_path="./tmp/tmp.png"):
     alpha = 0.33
 
     for mask_idx, det in enumerate(detections):
-        mask = rle_to_mask(det["segmentation"])
+        if det==[]:
+            continue
+        mask = rle_to_mask(det[0]["segmentation"])
         edge = canny(mask)
         edge = binary_dilation(edge, np.ones((2, 2)))
-        obj_id = det["category_id"]
+        obj_id = det[0]["category_id"]
         temp_id = obj_id - 1
 
         r = int(255*colors[temp_id][0])
